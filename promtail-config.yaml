@@ -9,6 +9,8 @@ positions:
 clients:
   #- url: http://loki:3100/loki/api/v1/push
   - url: http://localhost:3100/loki/api/v1/push
+    external_labels:
+      host: parent
 
 scrape_configs:
 - job_name: system
@@ -18,3 +20,4 @@ scrape_configs:
     labels:
       job: varlogs
       __path__: /var/log/*log
+
