@@ -77,7 +77,7 @@ echo "# "
 NUM=0
 while true
 do
-	LINE="$(date) ${HOSTNAME} synthetic data, message #${NUM}"
+	LINE="$(date) ${HOSTNAME} synthetic_data=true, message=${NUM}"
 	echo $LINE >> ${LOG_LOCAL}
 	echo $LINE >> ${LOG_DOCKER}
 	NUM=$(( NUM += 1 ))
