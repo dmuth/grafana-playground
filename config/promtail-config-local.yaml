@@ -4,7 +4,7 @@ server:
 
 positions:
   #filename: /tmp/positions.yaml
-  filename: ./positions.yaml
+  filename: ./var/positions-local.yaml
 
 clients:
   #- url: http://loki:3100/loki/api/v1/push
