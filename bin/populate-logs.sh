@@ -14,6 +14,45 @@ CURRENT_USER=${USER}
 pushd $(dirname $0)/.. > /dev/null
 
 
+#
+# Print our syntax and exit.
+#
+function print_syntax() {
+	echo "! "
+	echo "! Syntax: $0 [ truncate ] "
+	echo "! "
+	echo "! truncate - If specified, truncate the logs."
+	echo "! "
+	exit 1
+}
+
+
+if test "$1" == "-h" -o "$1" == "---help"
+then
+	print_syntax
+fi
+
+
+if test "$1" == "truncate"
+then
+	echo "# "
+	echo "# Truncating logfiles: "
+	echo "# "
+	echo "# - ${LOG_LOCAL}"
+	echo "# - ${LOG_DOCKER}"
+	echo "# "
+	echo > ${LOG_LOCAL} 
+	echo > ${LOG_DOCKER}
+	echo "# Logs truncated!"
+	exit
+
+elif test "$1"
+then
+	print_syntax
+
+fi
+
+
 echo "# "
 echo "# Creating ${LOG_LOCAL} and changing owner to ${CURRENT_USER}..."
 echo "# You may be asked for your sudo password shortly..."
