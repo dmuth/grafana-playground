@@ -3,12 +3,12 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: ./var/positions-local.yaml
+  filename: ./mnt/var/positions-docker.yaml
 
 clients:
-  - url: http://localhost:3100/loki/api/v1/push
+  - url: http://loki:3100/loki/api/v1/push
     external_labels:
-      host: parent
+      host: docker
 
 scrape_configs:
 - job_name: system
@@ -17,5 +17,5 @@ scrape_configs:
       - localhost
     labels:
       job: varlogs
-      __path__: /var/log/*log
+      __path__: /mnt/logs/*log
 

@@ -10,7 +10,6 @@ services:
       - "3100:3100"
     volumes:
       - .:/mnt/config
-    #command: -config.file=/etc/loki/local-config.yaml
     command: -config.file=/mnt/config/loki-config.yaml
     networks:
       - loki
@@ -18,10 +17,10 @@ services:
   promtail:
     image: grafana/promtail:2.3.0
     volumes:
-      - /var/log:/var/log
-      - .:/mnt/config
-    #command: -config.file=/etc/promtail/config.yml
-    command: -config.file=/mnt/config/promtail-config.yaml
+      - ./config:/mnt/config
+      - ./logs:/mnt/logs
+      - ./var:/mnt/var
+    command: -config.file=/mnt/config/promtail-config-docker.yaml
     networks:
       - loki
 
