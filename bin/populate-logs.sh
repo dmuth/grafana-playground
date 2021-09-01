@@ -6,7 +6,7 @@
 # Errors are fatal
 set -e
 
-LOG=logs/for-dockerized-promtail.log
+LOG=logs/for-promtail.log
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script
