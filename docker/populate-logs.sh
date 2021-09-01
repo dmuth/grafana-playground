@@ -6,7 +6,10 @@
 # Errors are fatal
 set -e
 
-LOG=logs/for-promtail.log
+#LOG=logs/for-promtail.log
+#LOG=/var/log/for-promtail.log
+#LOG=./for-promtail.log
+LOG=/var/log/promtail/for-promtail.log
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script
@@ -58,12 +61,15 @@ echo "# "
 echo "# Press ctrl-C to stop at anytime..."
 echo "# "
 
+rm -f ${LOG}
+
 NUM=0
 while true
 do
 	LINE="$(date) ${HOSTNAME} synthetic_data=true, message=${NUM}"
 	echo $LINE >> ${LOG}
 	NUM=$(( NUM += 1 ))
+	#ls -l ${LOG} # Debugging
 	sleep 1
 done
 

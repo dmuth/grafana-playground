@@ -3,6 +3,9 @@ version: "3"
 networks:
   loki:
 
+volumes: 
+  logs:
+
 services:
   loki:
     image: grafana/loki:2.3.0
@@ -14,13 +17,22 @@ services:
     networks:
       - loki
 
+  logs:
+    build:
+      context: docker
+      dockerfile: "Dockerfile"
+    volumes:
+      - logs:/var/log/promtail
+    networks:
+      - loki
+
   promtail:
     image: grafana/promtail:2.3.0
     volumes:
+      - logs:/var/log/promtail
       - ./config:/mnt/config
       - ./var:/mnt/var
       - /var/log:/var/log
-      - ./logs/for-promtail.log:/var/log/for-promtail.log
     command: -config.file=/mnt/config/promtail-config-docker.yaml
     networks:
       - loki
@@ -31,3 +43,6 @@ services:
       - "3000:3000"
     networks:
       - loki
+
+
+

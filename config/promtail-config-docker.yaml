@@ -24,4 +24,9 @@ scrape_configs:
     labels:
       job: varlogs
       __path__: /var/log/*.log
+  - targets:
+      - localhost
+    labels:
+      job: varlogs-promtail
+      __path__: /var/log/promtail/*.log
 
