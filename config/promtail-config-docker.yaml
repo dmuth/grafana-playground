@@ -5,11 +5,17 @@ server:
 positions:
   filename: ./mnt/var/positions-docker.yaml
 
+#
+# Where to send logs.
+#
 clients:
   - url: http://loki:3100/loki/api/v1/push
     external_labels:
       host: docker
 
+#
+# What to read.
+#
 scrape_configs:
 - job_name: system
   static_configs:
@@ -17,5 +23,5 @@ scrape_configs:
       - localhost
     labels:
       job: varlogs
-      __path__: /mnt/logs/*log
+      __path__: /var/log/*.log
 

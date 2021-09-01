@@ -5,17 +5,28 @@ server:
 positions:
   filename: ./var/positions-local.yaml
 
+#
+# Where to send logs.
+#
 clients:
   - url: http://localhost:3100/loki/api/v1/push
     external_labels:
       host: parent
 
+#
+# What to read.
+#
 scrape_configs:
 - job_name: system
   static_configs:
   - targets:
       - localhost
     labels:
-      job: varlogs
-      __path__: /var/log/*log
+      job: localvarlogs
+      __path__: /var/log/*.log
+  - targets:
+      - localhost
+    labels:
+      job: locallogs
+      __path__: logs/*.log
 
