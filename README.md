@@ -14,3 +14,11 @@
     - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
 
 
+
+## Development
+
+- Working on the `logs` container
+  - `docker-compose kill logs; docker-compose rm -f logs; docker-compose build logs && docker-compose up -d logs && docker-compose logs -f logs`
+
+
+
