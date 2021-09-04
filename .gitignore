@@ -7,3 +7,6 @@ logs/
 
 var/*.yaml
 
+loki-data/
+loki-wal/
+
