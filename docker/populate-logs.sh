@@ -10,7 +10,7 @@ set -e
 #LOG=/var/log/for-promtail.log
 #LOG=./for-promtail.log
 #LOG=/var/log/promtail/for-promtail.log
-LOG=/logs/promtail/for-promtail.log
+LOG=/logs/promtail/synthetic.log
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script
