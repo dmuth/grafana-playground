@@ -3,7 +3,7 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: ./var/positions-local.yaml
+  filename: ./data/promtail/positions-local.yaml
 
 #
 # Where to send logs.
