@@ -24,9 +24,39 @@ scrape_configs:
     labels:
       job: varlogs
       __path__: /var/log/*.log
-  - targets:
-      - localhost
-    labels:
-      job: varlogs-promtail
-      __path__: /var/log/promtail/*.log
+
+- job_name: promtail
+
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs-promtail
+        __path__: /var/log/promtail/*.log
+
+  pipeline_stages:
+  - match:
+      selector: '{job="varlogs-promtail"}'
+      stages:
+        - regex:
+            expression: '(?P<timestamp>(\w+ \w+ \d+ \d{2}:\d{2}:\d{2} \w+ \d{4})) (?P<host>\w+)' 
+        - regex:
+            expression: 'count=(?P<count>(\d+))'
+        - regex:
+            expression: 'count2=(?P<count2>(\d+))'
+        - regex:
+            expression: 'count3=(?P<count3>(\d+))'
+        - labels:
+            test_timestamp: timestamp
+            #host: host
+            count: count
+            count2: count2
+            count3: count3
+        - timestamp:
+            format: UnixDate
+            source: timestamp
+
+
+
+
 

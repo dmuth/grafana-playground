@@ -18,7 +18,9 @@
 ## Development
 
 - Working on the `logs` container
-  - `docker-compose kill logs; docker-compose rm -f logs; docker-compose build logs && docker-compose up -d logs && docker-compose logs -f logs`
+  - `docker-compose kill logs; docker-compose rm -f logs; docker-compose build logs && docker-compose up logs`
+- Working on the `promtail` container
+  - `docker-compose kill promtail; docker-compose rm -f promtail; docker-compose build promtail && docker-compose up promtail`
 
 
 
