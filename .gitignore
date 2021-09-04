@@ -11,6 +11,11 @@ data/promtail/*.yaml
 #
 # Don't include Loki's database.
 #
-loki-data/
-loki-wal/
+data/loki-data/
+data/loki-wal/
+
+#
+# Don't include anything from Grafana
+#
+data/grafana
 
