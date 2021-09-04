@@ -3,10 +3,14 @@
 *.swp
 *~
 
-logs/
+#
+# Don't include Promtail's offset tracking files.
+#
+data/promtail/*.yaml
 
-var/*.yaml
-
+#
+# Don't include Loki's database.
+#
 loki-data/
 loki-wal/
 

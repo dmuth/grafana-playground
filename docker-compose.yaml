@@ -13,8 +13,8 @@ services:
       - "3100:3100"
     volumes:
       - ./config:/mnt/config
-      - ./loki-data:/tmp/loki
-      - ./loki-wal:/tmp/wal
+      - ./data/loki-data:/tmp/loki
+      - ./data/loki-wal:/tmp/wal
     command: -config.file=/mnt/config/loki-config.yaml
     networks:
       - loki
@@ -34,7 +34,7 @@ services:
     volumes:
       - logs:/logs/
       - ./config:/mnt/config
-      - ./var:/mnt/var
+      - ./data/promtail:/mnt/var
       - /var/log:/var/log
     command: -config.file=/mnt/config/promtail-config-docker.yaml
     networks:
