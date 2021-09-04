@@ -92,9 +92,9 @@ do
 		NUM_10000=0
 	fi
 
-	LINE="$(date) ${HOSTNAME} synthetic_data=true, count=${NUM} count2=${NUM_1000} count3=${NUM_10000}"
+	LINE="$(date) ${HOSTNAME} This is synthetic data, beep-bep! count=${NUM} count2=${NUM_1000} count3=${NUM_10000}"
 
-	echo $LINE # Debugging
+	#echo $LINE # Debugging
 	echo $LINE >> ${LOG}
 
 	NUM=$(( NUM += 1 ))

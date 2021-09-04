@@ -17,6 +17,7 @@ services:
     networks:
       - loki
 
+  # Container to make fake logs
   logs:
     build:
       context: docker
