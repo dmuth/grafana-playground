@@ -1,24 +1,9 @@
 version: "3"
 
-networks:
-  loki:
-
 volumes: 
   logs:
 
 services:
-  loki:
-    image: grafana/loki:2.3.0
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./config:/mnt/config
-      - ./data/loki-data:/tmp/loki
-      - ./data/loki-wal:/tmp/wal
-    command: -config.file=/mnt/config/loki-config.yaml
-    networks:
-      - loki
-
   # Container to make fake logs
   logs:
     build:
@@ -26,8 +11,6 @@ services:
       dockerfile: "Dockerfile"
     volumes:
       - logs:/logs/
-    networks:
-      - loki
 
   promtail:
     image: grafana/promtail:2.3.0
@@ -37,8 +20,16 @@ services:
       - ./data/promtail:/mnt/var
       - /var/log:/var/log
     command: -config.file=/mnt/config/promtail-config-docker.yaml
-    networks:
-      - loki
+
+  loki:
+    image: grafana/loki:2.3.0
+    volumes:
+      - ./config:/mnt/config
+      - ./data/loki-data:/tmp/loki
+      - ./data/loki-wal:/tmp/wal
+    command: -config.file=/mnt/config/loki-config.yaml
+    ports:
+      - "3100:3100"
 
   grafana:
     image: grafana/grafana:latest
@@ -46,8 +37,6 @@ services:
       - ./data/grafana:/var/lib/grafana
     ports:
       - "3000:3000"
-    networks:
-      - loki
 
 
 
