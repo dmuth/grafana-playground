@@ -74,17 +74,17 @@ rm -f ${LOG}
 
 
 NUM=0
+NUM_1000=0
+NUM_10000=0
 while true
 do
 
-	NUM_1000=${NUM}
 	if (( ${NUM_1000} % 1000 == 0 ))
 	#if (( ${NUM_1000} % 10 == 0 )) # Debugging
 	then
 		NUM_1000=0
 	fi
 
-	NUM_10000=${NUM}
 	if (( ${NUM_10000} % 10000 == 0 ))
 	then
 		NUM_10000=0
@@ -96,6 +96,8 @@ do
 	echo $LINE >> ${LOG}
 
 	NUM=$(( NUM += 1 ))
+	NUM_1000=$(( NUM_1000 += 1 ))
+	NUM_10000=$(( NUM_10000 += 1 ))
 	#ls -l ${LOG} # Debugging
 	
 	#
