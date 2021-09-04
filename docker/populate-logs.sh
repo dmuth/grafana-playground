@@ -20,7 +20,7 @@ pushd $(dirname $0)/.. > /dev/null
 #
 # How often to remove the file and start over?
 #
-RM_EVERY=1000000
+RM_EVERY=100000
 #RM_EVERY=5 # Debugging
 
 
