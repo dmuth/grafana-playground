@@ -9,7 +9,8 @@ set -e
 #LOG=logs/for-promtail.log
 #LOG=/var/log/for-promtail.log
 #LOG=./for-promtail.log
-LOG=/var/log/promtail/for-promtail.log
+#LOG=/var/log/promtail/for-promtail.log
+LOG=/logs/promtail/for-promtail.log
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script
@@ -70,6 +71,7 @@ echo "# "
 echo "# Press ctrl-C to stop at anytime..."
 echo "# "
 
+mkdir -p $(dirname ${LOG})
 rm -f ${LOG}
 
 

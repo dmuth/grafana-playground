@@ -32,7 +32,7 @@ scrape_configs:
         - localhost
       labels:
         job: varlogs-promtail
-        __path__: /var/log/promtail/*.log
+        __path__: /logs/promtail/*.log
 
   pipeline_stages:
   - match:

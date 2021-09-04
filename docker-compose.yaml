@@ -22,14 +22,14 @@ services:
       context: docker
       dockerfile: "Dockerfile"
     volumes:
-      - logs:/var/log/promtail
+      - logs:/logs/
     networks:
       - loki
 
   promtail:
     image: grafana/promtail:2.3.0
     volumes:
-      - logs:/var/log/promtail
+      - logs:/logs/
       - ./config:/mnt/config
       - ./var:/mnt/var
       - /var/log:/var/log
