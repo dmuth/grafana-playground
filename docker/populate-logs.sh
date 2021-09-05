@@ -6,16 +6,12 @@
 # Errors are fatal
 set -e
 
-#LOG=logs/for-promtail.log
-#LOG=/var/log/for-promtail.log
-#LOG=./for-promtail.log
-#LOG=/var/log/promtail/for-promtail.log
-LOG=/logs/promtail/synthetic.log
+LOG="/logs/promtail/synthetic.log"
+LOG_MANUAL="/logs/promtail/manual.log"
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script
 pushd $(dirname $0)/.. > /dev/null
-
 
 #
 # How often to remove the file and start over?
@@ -23,15 +19,18 @@ pushd $(dirname $0)/.. > /dev/null
 RM_EVERY=100000
 #RM_EVERY=5 # Debugging
 
+# Ensure our log directory exists.
+mkdir -p $(dirname ${LOG})
+
 
 #
 # Print our syntax and exit.
 #
 function print_syntax() {
 	echo "! "
-	echo "! Syntax: $0 [ truncate ] "
+	echo "! Syntax: $0 [ num ] "
 	echo "! "
-	echo "! truncate - If specified, truncate the log."
+	echo "! num - If specified, manually write num rows to ${LOG_MANUAL} and then exit."
 	echo "! "
 	exit 1
 }
@@ -43,15 +42,50 @@ then
 fi
 
 
-if test "$1" == "truncate"
+if test "$1" 
 then
+	NUM_ROWS=$1
 	echo "# "
-	echo "# Truncating logfile: "
+	echo "# Manually feeding ${NUM_ROWS} rows into ${LOG_MANUAL}..."
 	echo "# "
-	echo "# - ${LOG}"
-	echo "# "
-	echo > ${LOG} 
-	echo "# Logs truncated!"
+
+	if test "${NUM_ROWS}" -le 0
+	then
+		print_syntax
+	fi
+
+	# Cleanup from a previous run.
+	rm -fv ${LOG_MANUAL} > /dev/null
+
+	#
+	# Calculate how many characters wide the numbers should be.
+	# We have to do this because % will assume that numbers with leading zeros
+	# are octal and choke on them.
+	#
+	WIDTH=$(echo -n ${NUM_ROWS} | wc -c)
+
+	DATE=$(date)
+
+	for I in $(seq 1 ${NUM_ROWS})
+	do
+
+		#
+		# Every 100 rows, let's grab a new date. 
+		# This is less abusive than running the date command on *every* row,
+		# yet still lets us keep the date close to being in sync with the rows.
+		#
+		if (( ${I} % 100 == 0 ))
+		then
+			DATE=$(date)
+		fi
+
+		LINE="${DATE} ${HOSTNAME} This is manual data. count=${I} total=${NUM_ROWS}" 
+		printf "%s %s This is manual data. count=%0${WIDTH}d total=%s\n" \
+			"${DATE}" "${HOSTNAME}" "${I}" "${NUM_ROWS}" >> ${LOG_MANUAL}
+	done
+
+	#ls -l $(dirname ${LOG}) # Debugging
+
 	exit
 
 elif test "$1"
@@ -71,10 +105,15 @@ echo "# "
 echo "# Press ctrl-C to stop at anytime..."
 echo "# "
 
-mkdir -p $(dirname ${LOG})
+# Cleanup from a previous run.
 rm -f ${LOG}
 
 
+#
+# If we made it here, we're going to do a "normal" run, wherein we loop forever,
+# writing one row a second, and periodically rotating the logfile so it doesn't 
+# grow too large.
+#
 NUM=0
 NUM_1000=0
 NUM_10000=0

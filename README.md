@@ -14,6 +14,18 @@
     - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
 
 
+## Manually Injecting Logs
+
+If you want to manually inject an arbitrary number of logs, that can be done with this command:
+
+- `docker-compose run logs n`
+
+Replace `n` with the number of logs you want to write.  They will go into the file `/logs/promtail/manual.log`
+in the `logs` volume, which will then be picked up by the `promtail` container.  They can be viewed
+in Grafana with this query:
+
+- `{filename=~"/logs/promtail/manual.log"}`
+
 
 ## Development
 

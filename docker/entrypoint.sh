@@ -7,6 +7,6 @@
 set -e
 
 #exec /bin/bash # Debugging
-exec /populate-logs.sh
+exec /populate-logs.sh $@
 
 
