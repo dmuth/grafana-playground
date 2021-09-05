@@ -39,19 +39,25 @@ scrape_configs:
       selector: '{job="varlogs-promtail"}'
       stages:
         - regex:
-            expression: '(?P<timestamp>(\w+ \w+ \d+ \d{2}:\d{2}:\d{2} \w+ \d{4})) (?P<host>\w+)' 
-        - regex:
-            expression: 'count=(?P<count>(\d+))'
-        - regex:
-            expression: 'count2=(?P<count2>(\d+))'
-        - regex:
-            expression: 'count3=(?P<count3>(\d+))'
+            expression: '(?P<timestamp>(\w+ \w+ +\d+ \d{2}:\d{2}:\d{2} \w+ \d{4})) (?P<hostname>\w+)' 
+        #
+        # We can uncomment these to have more labels, but be advised that unique streams are based
+        # on labels, and a high cardinality means that we'll get "HTTP 429 Too Many Connections" errors.
+        #
+        # Fewer labels == better performance
+        #
+        #- regex:
+        #    expression: 'count=(?P<count>(\d+))'
+        #- regex:
+        #    expression: 'count2=(?P<count2>(\d+))'
+        #- regex:
+        #    expression: 'count3=(?P<count3>(\d+))'
         - labels:
-            test_timestamp: timestamp
-            #host: host
-            count: count
-            count2: count2
-            count3: count3
+            hostname: hostname
+            #count: count
+            #count2: count2
+            #count3: count3
+            #test_timestamp: timestamp
         - timestamp:
             format: UnixDate
             source: timestamp
