@@ -8,6 +8,12 @@ ingester:
   wal:
     enabled: true
     dir: /tmp/wal
+    #
+    # Create checkpoints every minute.  I wouldn't normally do this in production,
+    # but for testing/dev where I could be slamming in a bunch of events all at once
+    # for testing purposes, I don't want to have huge WALs floating around if I can help it.
+    #
+    checkpoint_duration: 1m
   lifecycler:
     address: 127.0.0.1
     ring:
