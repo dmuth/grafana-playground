@@ -4,7 +4,9 @@ volumes:
   logs:
 
 services:
+  #
   # Container to make fake logs
+  #
   logs:
     build:
       context: docker
@@ -12,6 +14,9 @@ services:
     volumes:
       - logs:/logs/
 
+  #
+  # Read logs from files and ingest into Loki.
+  #
   promtail:
     image: grafana/promtail:2.3.0
     volumes:
@@ -21,6 +26,9 @@ services:
       - /var/log:/var/log
     command: -config.file=/mnt/config/promtail-config-docker.yaml
 
+  #
+  # The Loki database for storing logs.
+  #
   loki:
     image: grafana/loki:2.3.0
     volumes:
@@ -31,6 +39,9 @@ services:
     ports:
       - "3100:3100"
 
+  #
+  # Grafana, for viewing via the UI.
+  #
   grafana:
     image: grafana/grafana:latest
     volumes:
