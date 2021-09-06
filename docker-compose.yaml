@@ -9,7 +9,7 @@ services:
   #
   logs:
     build:
-      context: docker
+      context: docker/logs
       dockerfile: "Dockerfile"
     volumes:
       - logs:/logs/

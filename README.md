@@ -27,7 +27,7 @@
   - Click `Upload JSON file` and navgiate to the file `config/log-volume-dashboard.json`, then click `Import`.
 - The dashboard should now show a breakdown of all log volumes.
 - To run a specific query, click the `Compass` on the left which pouts you into `Explorer Mode`.
-  - Then paste in this query: `{filename="/logs/promtail/synthetic.log}`.
+  - Then paste in this query: `{filename="/logs/synthetic/synthetic.log}`.
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.
 
 
@@ -37,11 +37,11 @@ If you want to manually inject an arbitrary number of logs, that can be done wit
 
 - `docker-compose run logs n`
 
-Replace `n` with the number of logs you want to write.  They will go into the file `/logs/promtail/manual.log`
+Replace `n` with the number of logs you want to write.  They will go into the file `/logs/synthetic/manual.log`
 in the `logs` volume, which will then be picked up by the `promtail` container.  They can be viewed
 in Grafana with this query:
 
-- `{filename=~"/logs/promtail/manual.log"}`
+- `{filename=~"/logs/synthetic/manual.log"}`
 
 
 ## Sending Docker Logs to Loki

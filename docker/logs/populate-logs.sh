@@ -6,8 +6,8 @@
 # Errors are fatal
 set -e
 
-LOG="/logs/promtail/synthetic.log"
-LOG_MANUAL="/logs/promtail/manual.log"
+LOG="/logs/synthetic/synthetic.log"
+LOG_MANUAL="/logs/synthetic/manual.log"
 CURRENT_USER=${USER}
 
 # Change to parent directory of this script

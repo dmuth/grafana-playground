@@ -31,8 +31,8 @@ scrape_configs:
     - targets:
         - localhost
       labels:
-        job: varlogs-promtail
-        __path__: /logs/promtail/*.log
+        job: logs-synthetic
+        __path__: /logs/synthetic/*.log
 
   pipeline_stages:
   - match:
