@@ -15,6 +15,16 @@ services:
       - logs:/logs/
 
   #
+  # Container to continuously ping hosts.
+  #
+  ping:
+    build:
+      context: docker/ping
+      dockerfile: "Dockerfile"
+    volumes:
+      - logs:/logs/
+
+  #
   # Read logs from files and ingest into Loki.
   #
   promtail:
