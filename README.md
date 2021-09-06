@@ -1,17 +1,20 @@
 
 # Grafana Playground
 
+This is a little project I put together that lets you spin up a Grafana-based environment in Docker and automatically feed in logs.  That environment includes:
 
-- `./bin/populate-logs.sh` - Run to write log entries to `logs/for-promtail.log` once per second.  This is ingested by Promtail.
-- `./bin/run-local-promtail.sh` - Run locally on a Mac to ingest logs into Loki.  This is necessary because you cannot import `/var/log/` into Docker for OS/X.
-- `./bin/query.sh` - Query the Dockerized instance of Loki on the command line.
-  - Examples:
-    - `./bin/query.sh '{job="varlogs"}'`
-    - `./bin/query.sh '{job="varlogs"}' 5`
-    - `./bin/query.sh '{job="varlogs",host="docker"}'`
-    - `./bin/query.sh '{job="varlogs",filename="/var/log/system.log"}'`
-    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"}'`
-    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
+- Grafana, for graphing
+- Loki, for storing time series logs
+- A Docker container called `logs`, which automatically generates synthetic log entries.
+- Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
+
+
+## Getting Started
+
+Run `docker-compose up` and this will spin up each of the containers mentioned above, making the following endpoints available:
+
+- http://localhost:3000/ - Local Grafana instance. Login and pass are `admin/admin`.
+- http://localhost:3100/ - Local Loki instance.  Check http://localhost:3100/ready to see if the instance is ready.
 
 
 ## Viewing Logs
@@ -44,6 +47,30 @@ in Grafana with this query:
 - `{filename=~"/logs/synthetic/manual.log"}`
 
 
+## Considerations for Mac Users
+
+For whatever reason, I have not had any luck mapping `/var/log/` on my Mac to a Docker container.  
+I tried a bunch of different things, but no luck.  I ended up coming up with a workaround, which
+is to install and run Promtail locally:
+
+- `brew install promtail`
+- `./bin/run-local-promtail.sh` - Run this locally to send logs to the Dockerized version of Loki.
+
+
+## Command Line Utilities
+
+If you want to query Loki directly, I write a command-line script for that:
+
+- `./bin/query.sh` - Query the Dockerized instance of Loki on the command line.
+  - Examples:
+    - `./bin/query.sh '{job="varlogs"}'`
+    - `./bin/query.sh '{job="varlogs"}' 5`
+    - `./bin/query.sh '{job="varlogs",host="docker"}'`
+    - `./bin/query.sh '{job="varlogs",filename="/var/log/system.log"}'`
+    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"}'`
+    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
+
+
 ## Sending Docker Logs to Loki
 
 Docker normally writes standard output from its containers to a file.  However, standard output
@@ -66,6 +93,15 @@ Here's how to do that:
   - The dashboard should now show a breakdown of all log volumes.
 
 More about how to configure the Docker Loki plugin [can be read here](https://grafana.com/docs/loki/latest/clients/docker-driver/configuration/).
+
+
+## Additional Considerations
+
+- For Loki, I set `min_ready_duration` to be 5 seconds so that the database is ready quicker.
+  - I would not recommend this setting for production use.
+- There are some label extractions in `config/promtail-config-docker.yaml` which are commented out.
+  - Feel free to uncomment them if you want to expirment with labels, but be advised the number of streams is the *product* of how many different label values you can have, which can cause performance issues.  That is explained more [in this post](https://grafana.com/blog/2020/08/27/the-concise-guide-to-labels-in-loki/)
+  - TL;DR If you go crazy with labels and try to Index a high-cardinality field, you're gonna have a bad time!
 
 
 ## Development
