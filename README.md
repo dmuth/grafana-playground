@@ -31,7 +31,6 @@
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.
 
 
-
 ## Manually Injecting Logs
 
 If you want to manually inject an arbitrary number of logs, that can be done with this command:
@@ -43,6 +42,30 @@ in the `logs` volume, which will then be picked up by the `promtail` container. 
 in Grafana with this query:
 
 - `{filename=~"/logs/promtail/manual.log"}`
+
+
+## Sending Docker Logs to Loki
+
+Docker normally writes standard output from its containers to a file.  However, standard output
+can also be sent somewhere else... such as Loki.  Even the output from Loki can be sent back to itself!
+Here's how to do that:
+
+- First, install the Docker plugin to talk to Loki:
+  - `docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions`
+- Now, set up a symlink so a `docker-compose.override.yml` file will be read in:
+  - `ln -s docker-compose.override.yml.sample docker-compose.override.yml`
+- If you are currently running any containers, you must kill and restart them as follows:
+  - `docker-compose kill logs; docker-compose up -d logs`
+- You can verify the container is sending its logs to Loki with a command similar to:
+  - `docker inspect grafana-playground_logs_1 | jq .[].HostConfig.LogConfig`
+- From there, you can view logs from all your containers in Grafana with this query:
+  - `{host="docker-desktop"}`
+- To import the dashboard for viewing Docker logs:
+  - Hover over the plus sign (`+`) on the left, click `Import`.
+    - Click `Upload JSON file` and navgiate to the file `config/log-volume-dashboard.json`, then click `Import`.
+  - The dashboard should now show a breakdown of all log volumes.
+
+More about how to configure the Docker Loki plugin [can be read here](https://grafana.com/docs/loki/latest/clients/docker-driver/configuration/).
 
 
 ## Development

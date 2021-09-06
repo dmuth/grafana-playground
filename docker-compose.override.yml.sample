@@ -1,4 +1,11 @@
 
+#
+# Be sure to run:
+#
+#		ln -s docker-compose.override.yml.sample docker-compose.override.yml 
+#
+# ...if you want this file to be used.
+#
 services:
   logs:
     logging:
