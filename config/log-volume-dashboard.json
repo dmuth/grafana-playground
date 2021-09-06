@@ -168,7 +168,7 @@
       "pluginVersion": "8.1.2",
       "targets": [
         {
-          "expr": "{host!=\"docker-desktop\",filename=\"/logs/promtail/synthetic.log\"}",
+          "expr": "{host!=\"docker-desktop\",filename=\"/logs/synthetic/synthetic.log\"}",
           "maxLines": 5,
           "refId": "A"
         }
@@ -252,5 +252,5 @@
   "timezone": "",
   "title": "Log Volume",
   "uid": "fponVrV7z",
-  "version": 39
+  "version": 41
 }
