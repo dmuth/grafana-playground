@@ -31,11 +31,13 @@ mkdir -p ${LOGDIR}
 function createService() {
 
 	NAME=$1
+	LOG=${LOGDIR}/${NAME}.log
 
 	cd /service
 
 	mkdir -p ${NAME}
 	cd ${NAME}
+
 
 	#
 	# Create our script which pings the specified host for 1 hour, 
@@ -45,8 +47,17 @@ function createService() {
 	# Note this is my hacked version of ping, so it will write a
 	# checkpoint out every 10 pings.
 	#
+	NUM_PINGS=3600
+	#NUM_PINGS=5 # Debugging
 	echo "#!/bin/bash" >> run
-	echo "/iputils/ping google.com -c 3600 2>&1 | tai64n | tai64nlocal >> ${LOGDIR}/${NAME}.log" >> run
+	echo "cd \$(dirname \$0)" >> run
+
+	#
+	# Rotate the old logfile.  We do this in case promtail isn't finished reading it.
+	#
+	echo "mv -f ${LOG} ${LOG}.OLD || true" >> run
+
+	echo "/iputils/ping google.com -c ${NUM_PINGS} 2>&1 | tai64n | tai64nlocal >> ${LOG}" >> run
 	chmod 755 run
 	#ls -l # Debugging
 	#cat run # Debugging
@@ -64,6 +75,10 @@ do
 	createService ${HOST}
 done
 
+#cat /service/8.8.8.8/run # Debugging
+#/service/8.8.8.8/run # Debugging
+#ls -l /logs/ping/ # Debuggin
+#exit # Debugging
 
 #
 # Launch our main service scanner, which will monitor all 
