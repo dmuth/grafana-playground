@@ -27,6 +27,8 @@ FROM debian:buster
 RUN apt update && apt install -y libidn2-0-dev
 WORKDIR /iputils
 
+RUN apt install -y daemontools-run
+RUN apt install -y procps
 
 #
 # Copy our hacked ping.
