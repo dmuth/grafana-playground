@@ -76,12 +76,9 @@ scrape_configs:
       selector: '{job="logs-ping"}'
       stages:
         - regex:
-            #expression: '(?P<timestamp>(\w+ \w+ +\d+ \d{2}:\d{2}:\d{2} \w+ \d{4})) (?P<hostname>\w+)' 
-            #expression: '(?P<timestamp>(\d+-\d+-\d+))' 
-            #expression: '(?P<timestamp>(\d+-\d+-\d+ \d+:\d+:\d+))' 
             expression: '(?P<timestamp>(\d+-\d+-\d+ \d+:\d+:\d+\.\d+))' 
-        - labels:
-            test_timestamp: timestamp
+        #- labels:
+        #    test_timestamp: timestamp
         - timestamp:
             source: timestamp
             #
