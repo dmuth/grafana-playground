@@ -57,7 +57,7 @@ function createService() {
 	#
 	echo "mv -f ${LOG} ${LOG}.OLD || true" >> run
 
-	echo "/iputils/ping google.com -c ${NUM_PINGS} 2>&1 | tai64n | tai64nlocal >> ${LOG}" >> run
+	echo "/iputils/ping ${NAME} -c ${NUM_PINGS} 2>&1 | tai64n | tai64nlocal >> ${LOG}" >> run
 	chmod 755 run
 	#ls -l # Debugging
 	#cat run # Debugging
