@@ -15,6 +15,7 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
 
 - http://localhost:3000/ - Local Grafana instance. Login and pass are `admin/admin`.
 - http://localhost:3100/ - Local Loki instance.  Check http://localhost:3100/ready to see if the instance is ready.
+- http://localhost:9081/targets - Targets page for the (Dockerized) instance of promtail.
 
 
 ## Viewing Logs

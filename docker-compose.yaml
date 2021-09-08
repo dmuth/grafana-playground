@@ -37,6 +37,8 @@ services:
       - ./data/promtail:/mnt/var
       - /var/log:/var/log
     command: -config.file=/mnt/config/promtail-config-docker.yaml
+    ports:
+      - "9081:9080"
 
   #
   # The Loki database for storing logs.
