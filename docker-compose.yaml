@@ -13,6 +13,7 @@ services:
       dockerfile: "Dockerfile"
     volumes:
       - logs:/logs/
+    restart: "always"
 
   #
   # Container to continuously ping hosts.
@@ -25,6 +26,7 @@ services:
       HOSTS: "google.com amazon.com 8.8.8.8 1.1.1.1"
     volumes:
       - logs:/logs/
+    restart: "always"
 
   #
   # Read logs from files and ingest into Loki.
@@ -39,6 +41,7 @@ services:
     command: -config.file=/mnt/config/promtail-config-docker.yaml
     ports:
       - "9081:9080"
+    restart: "always"
 
   #
   # The Loki database for storing logs.
@@ -52,6 +55,7 @@ services:
     command: -config.file=/mnt/config/loki-config.yaml
     ports:
       - "3100:3100"
+    restart: "always"
 
   #
   # Grafana, for viewing via the UI.
@@ -62,6 +66,7 @@ services:
       - ./data/grafana:/var/lib/grafana
     ports:
       - "3000:3000"
+    restart: "always"
 
 
 
