@@ -20,6 +20,7 @@ fi
 #
 # Set up our /service directory and logs directory.
 #
+rm -fv /service
 ln -s /etc/service /service
 
 mkdir -p ${LOGDIR}
