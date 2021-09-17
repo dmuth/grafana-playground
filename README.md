@@ -59,7 +59,8 @@ in Grafana with this query:
 
 - Edit `docker-compose.yml`
 - Change the `HOSTS` variable for the `ping` container.
-- Restart the `ping` container with `docker-compose restart ping`.
+- Restart the `ping` container with `docker-compose kill ping; docker-compose up -d ping`
+- Current hosts being pined can be inspected with `docker inspect grafana-playground_ping_1 | jq .[].Config.Env` (adjust the container name accordingly).
 
 
 ## Considerations for Mac Users
