@@ -22,7 +22,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 6,
-  "iteration": 1631842769995,
+  "iteration": 1631913851200,
   "links": [],
   "panels": [
     {
@@ -79,8 +79,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 17,
-        "w": 24,
+        "h": 14,
+        "w": 23,
         "x": 0,
         "y": 0
       },
@@ -165,10 +165,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 17,
-        "w": 24,
+        "h": 14,
+        "w": 23,
         "x": 0,
-        "y": 17
+        "y": 14
       },
       "id": 3,
       "options": {
@@ -210,8 +210,8 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "10s",
-          "value": "10s"
+          "text": "1m",
+          "value": "1m"
         },
         "description": null,
         "error": null,
@@ -220,7 +220,7 @@
         "name": "interval",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "10s",
             "value": "10s"
           },
@@ -230,7 +230,7 @@
             "value": "30s"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "1m",
             "value": "1m"
           },
@@ -314,5 +314,5 @@
   "timezone": "",
   "title": "Ping Results",
   "uid": "WiThvuS7z",
-  "version": 31
+  "version": 33
 }
