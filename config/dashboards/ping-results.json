@@ -1,19 +1,4 @@
 {
-  "__inputs": [],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "8.1.2"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -36,8 +21,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
-  "iteration": 1631840751903,
+  "id": 6,
+  "iteration": 1631842769981,
   "links": [],
   "panels": [
     {
@@ -103,9 +88,10 @@
       "options": {
         "legend": {
           "calcs": [
+            "last",
             "lastNotNull",
-            "max",
             "min",
+            "max",
             "mean"
           ],
           "displayMode": "table",
@@ -123,6 +109,92 @@
         }
       ],
       "title": "Ping Times ($interval interval)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "% packet loss",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "lastNotNull",
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg(avg_over_time(\n{ filename=~\"/logs/ping/.*\" } \n|= \"transmitted\"\n| logfmt \n| line_format \"target={{.target}} received={{.received}} transmitted={{.transmitted}} pct={{divf .received .transmitted | mulf 100 | sub 100 }}\"\n| logfmt \n| unwrap pct\n[$interval]\n)) by (target)\n\n",
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Packet Loss ($interval interval)",
       "type": "timeseries"
     }
   ],
@@ -240,7 +312,7 @@
     ]
   },
   "timezone": "",
-  "title": "Ping Times",
+  "title": "Ping Results",
   "uid": "WiThvuS7z",
-  "version": 22
+  "version": 28
 }
