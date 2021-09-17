@@ -7,6 +7,7 @@ This is a little project I put together that lets you spin up a Grafana-based en
 - Loki, for storing time series logs
 - A Docker container called `logs`, which automatically generates synthetic log entries.
 - Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
+- `ping`, a container which pings multiple hosts, using the excellent [https://cr.yp.to/daemontools.html](Daemontools package) to handle multiple instances of ping running at once.
 
 
 ## Getting Started
@@ -28,10 +29,16 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
   - For the URL, enter `http://loki:3100/`
   - Click `Save and Test`
 - Hover over the plus sign (`+`) on the left, click `Import`.
-  - Click `Upload JSON file` and navgiate to the file `config/log-volume-dashboard.json`, then click `Import`.
-- The dashboard should now show a breakdown of all log volumes.
+  - Click `Upload JSON file`
+    - Navgiate to the file `config/dashboards/log-volume-dashboard.json`, then click `Import`.
+    - Repeat with `config/log-volume-dashboard-docker-containers.json`
+    - Repeat with `config/dashboards/ping-times.json`
+- You now have the following dashboards available:
+  - [http://localhost:3000/d/WiThvuS7z/ping-times?orgId=1&refresh=5s](Ping times)
+  - [http://localhost:3000/d/fponVrV7z/log-volume?orgId=1](Volume by Logfile) - Covers syslog, synthetic logs, and ping times.
+  - [http://localhost:3000/d/RQVYi6V7k/log-volume-docker-containers?orgId=1](Volume by Docker container) - This playground ingests logs from its own Docker containers, which can be viewed here.
 - To run a specific query, click the `Compass` on the left which pouts you into `Explorer Mode`.
-  - Then paste in this query: `{filename="/logs/synthetic/synthetic.log}`.
+  - Then paste in this query: `{ filename=~"/logs/synthetic/.*" }`.
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.
 
 
@@ -46,6 +53,13 @@ in the `logs` volume, which will then be picked up by the `promtail` container. 
 in Grafana with this query:
 
 - `{filename=~"/logs/synthetic/manual.log"}`
+
+
+## Changing Which Hosts are Pinged
+
+- Edit `docker-compose.yml`
+- Change the `HOSTS` variable for the `ping` container.
+- Restart the `ping` container with `docker-compose restart ping`.
 
 
 ## Considerations for Mac Users

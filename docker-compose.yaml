@@ -23,6 +23,10 @@ services:
       context: docker/ping
       dockerfile: "Dockerfile"
     environment:
+      #
+      # Host to ping.  Can be hostname or IP.  Space-delimited.
+      # Note that DNS lookups may fail, so consider pinging some IPs...
+      #
       HOSTS: "google.com amazon.com 8.8.8.8 1.1.1.1"
     volumes:
       - logs:/logs/

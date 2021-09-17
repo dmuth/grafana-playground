@@ -43,6 +43,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
+  "iteration": 1631840626782,
   "links": [],
   "panels": [
     {
@@ -126,7 +127,8 @@
         "legend": {
           "calcs": [
             "last",
-            "lastNotNull"
+            "lastNotNull",
+            "mean"
           ],
           "displayMode": "table",
           "placement": "bottom"
@@ -138,12 +140,12 @@
       "pluginVersion": "8.1.2",
       "targets": [
         {
-          "expr": "sum(count_over_time({host=\"docker-desktop\"}[1m])) by (compose_service)",
-          "legendFormat": "{{compose_service}}",
+          "expr": "sum(count_over_time({host!=\"docker-desktop\",filename=~\"/.*\"}[$interval])) by (filename)",
+          "legendFormat": "{{filename}}",
           "refId": "A"
         }
       ],
-      "title": "Volume by file, 1 minute rate",
+      "title": "Volume by file ($interval interval)",
       "type": "timeseries"
     },
     {
@@ -154,36 +156,6 @@
         "x": 0,
         "y": 13
       },
-      "id": 12,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.1.2",
-      "targets": [
-        {
-          "expr": "{host=\"docker-desktop\", compose_service=\"grafana\"}",
-          "maxLines": 100,
-          "refId": "A"
-        }
-      ],
-      "title": "100 Most Recent Log Entries for \"grafana\" Container",
-      "type": "logs"
-    },
-    {
-      "datasource": null,
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 18
-      },
       "id": 6,
       "options": {
         "dedupStrategy": "none",
@@ -193,56 +165,27 @@
         "showLabels": false,
         "showTime": false,
         "sortOrder": "Descending",
-        "wrapLogMessage": true
+        "wrapLogMessage": false
       },
       "pluginVersion": "8.1.2",
       "targets": [
         {
-          "expr": "{host=\"docker-desktop\", compose_service=\"logs\"}",
-          "maxLines": 100,
+          "expr": "{host!=\"docker-desktop\",filename=\"/logs/synthetic/synthetic.log\"}",
+          "maxLines": 5,
           "refId": "A"
         }
       ],
-      "title": "100 Most Recent Log Entries for \"logs\" Container",
+      "title": "5 Most Recent Synthetic Log Entries",
       "type": "logs"
     },
     {
       "datasource": null,
+      "description": "This will be empty if you are running on a Mac, as syslog can't be ingested from Docker.  In that case, you'll need to run Promtail locally, as outlined in the README for this project.",
       "gridPos": {
-        "h": 5,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 23
-      },
-      "id": 13,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "8.1.2",
-      "targets": [
-        {
-          "expr": "{host=\"docker-desktop\", compose_service=\"loki\"}",
-          "maxLines": 100,
-          "refId": "A"
-        }
-      ],
-      "title": "100 Most Recent Log Entries for \"loki\" Container",
-      "type": "logs"
-    },
-    {
-      "datasource": null,
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 28
+        "y": 18
       },
       "id": 11,
       "options": {
@@ -258,12 +201,12 @@
       "pluginVersion": "8.1.2",
       "targets": [
         {
-          "expr": "{host=\"docker-desktop\", compose_service=\"promtail\"}",
+          "expr": "{host!=\"docker-desktop\",filename=\"/var/log/system.log\"}",
           "maxLines": 100,
           "refId": "A"
         }
       ],
-      "title": "100 Most Recent Log Entries for \"promtail\" Container",
+      "title": "100 Most Recent System Log Entries",
       "type": "logs"
     },
     {
@@ -272,7 +215,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 28
       },
       "id": 7,
       "options": {
@@ -288,12 +231,12 @@
       "pluginVersion": "8.1.2",
       "targets": [
         {
-          "expr": "{host=\"docker-desktop\"}",
+          "expr": "{host!=\"docker-desktop\",filename=~\"/.*\"}",
           "maxLines": 100,
           "refId": "A"
         }
       ],
-      "title": "100 Most Recent Log Entries for All Containers",
+      "title": "100 Most Recent Log Entries",
       "type": "logs"
     }
   ],
@@ -302,7 +245,90 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": true,
+          "text": "1m",
+          "value": "1m"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": null,
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "10s",
+            "value": "10s"
+          },
+          {
+            "selected": false,
+            "text": "30s",
+            "value": "30s"
+          },
+          {
+            "selected": true,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "10s,30s,1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
   },
   "time": {
     "from": "now-1h",
@@ -310,7 +336,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Log Volume - Docker Containers",
-  "uid": "RQVYi6V7k",
-  "version": 7
+  "title": "Log Volume",
+  "uid": "fponVrV7z",
+  "version": 49
 }
