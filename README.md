@@ -34,9 +34,9 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
     - Repeat with `config/log-volume-dashboard-docker-containers.json`
     - Repeat with `config/dashboards/ping-times.json`
 - You now have the following dashboards available:
-  - [http://localhost:3000/d/WiThvuS7z/ping-times?orgId=1&refresh=5s](Ping times)
-  - [http://localhost:3000/d/fponVrV7z/log-volume?orgId=1](Volume by Logfile) - Covers syslog, synthetic logs, and ping times.
-  - [http://localhost:3000/d/RQVYi6V7k/log-volume-docker-containers?orgId=1](Volume by Docker container) - This playground ingests logs from its own Docker containers, which can be viewed here.
+  - [Ping times](http://localhost:3000/d/WiThvuS7z/ping-times?orgId=1&refresh=5s)
+  - [Volume by Logfile](http://localhost:3000/d/fponVrV7z/log-volume?orgId=1) - Covers syslog, synthetic logs, and ping times.
+  - [Volume by Docker container](http://localhost:3000/d/RQVYi6V7k/log-volume-docker-containers?orgId=1) - This playground ingests logs from its own Docker containers, which can be viewed here.
 - To run a specific query, click the `Compass` on the left which pouts you into `Explorer Mode`.
   - Then paste in this query: `{ filename=~"/logs/synthetic/.*" }`.
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.
