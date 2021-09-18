@@ -95,8 +95,9 @@ Here's how to do that:
 
 - First, install the Docker plugin to talk to Loki:
   - `docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions`
-- Now, set up a symlink so a `docker-compose.override.yml` file will be read in:
-  - `ln -s docker-compose.override.yml.sample docker-compose.override.yml`
+- Now, make a copy of `docker-compose.override.yml.sample` to `docker-compose.override.yml`:
+  - `cp -v docker-compose.override.yml.sample docker-compose.override.yml`
+  - `docker-compose.override.yml` is excluded with `.gitignore` so changes made be made to it.
 - If you are currently running any containers, you must kill and restart them as follows:
   - `docker-compose kill logs; docker-compose up -d logs`
 - You can verify the container is sending its logs to Loki with a command similar to:
