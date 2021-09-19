@@ -20,6 +20,11 @@ data/loki-wal/
 data/grafana
 
 #
+# Don't include Prometheus data
+#
+data/prometheus
+
+#
 # Don't include this, since we want it optional.
 #
 docker-compose.override.yml
