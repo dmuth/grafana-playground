@@ -75,7 +75,7 @@ def import_dashboards(url, api_key, dashboards):
 #
 # Add a specific data source.
 #
-def add_data_source(api_url, api_key, name, source_type, target_url):
+def add_data_source(api_url, api_key, name, source_type, target_url, default = False):
 
 	headers = {
 		"Content-Type":"application/json",
@@ -91,6 +91,9 @@ def add_data_source(api_url, api_key, name, source_type, target_url):
 		"access":"proxy",
 		"basicAuth": False,
 	}
+
+	if default:
+		data["isDefault"] = True
 
 	r = requests.post(url = url_import, headers = headers, data = json.dumps(data))
 
@@ -108,7 +111,7 @@ def add_data_source(api_url, api_key, name, source_type, target_url):
 #
 def add_data_sources(url, api_key):
 
-	add_data_source(url, api_key, "Loki", "loki", "http://loki:3100")
+	add_data_source(url, api_key, "Loki", "loki", "http://loki:3100", default = True)
 	add_data_source(url, api_key, "Prometheus", "prometheus", "http://prometheus:9090")
 
 
