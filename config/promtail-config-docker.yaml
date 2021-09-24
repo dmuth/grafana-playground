@@ -24,6 +24,9 @@ scrape_configs:
       - localhost
     labels:
       job: varlogs
+      #
+      # Note that on Macs, this won't pull in anything...
+      #
       __path__: /var/log/*.log
 
 - job_name: synthetic
