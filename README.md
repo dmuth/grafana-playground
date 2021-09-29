@@ -1,13 +1,14 @@
 
 # Grafana Playground
 
-This is a little project I put together that lets you spin up a Grafana-based environment in Docker and automatically feed in logs.  That environment includes:
+This is a little project I put together that lets you spin up a Grafana ecosystem in Docker and automatically feed in syslogs to the Loki database and metrics to the Prometheus database.  That environment includes:
 
 - Grafana, for graphing
 - Loki, for storing time series logs
+- Prometheus, for storing time series metrics
+- `ping`, a container which pings multiple hosts, using the excellent [https://cr.yp.to/daemontools.html](Daemontools package) to handle multiple instances of ping running at once.  Those results are sent to Loki and can be viewed with an included dashboard.
 - A Docker container called `logs`, which automatically generates synthetic log entries.
 - Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
-- `ping`, a container which pings multiple hosts, using the excellent [https://cr.yp.to/daemontools.html](Daemontools package) to handle multiple instances of ping running at once.
 
 
 ## Getting Started
@@ -34,9 +35,19 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
 
 ## Viewing Dashboards
 
-You now have the following dashboards available:
+### The Ping dashboard
+
+Look, just start with the ping dashboard, okay?
 
 - [Ping Reuslts](http://localhost:3000/d/WiThvuS7z/ping-results) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
+
+Yeah, so you loaded the dashboard, and it's showing the results of pinging multiple hosts on the Internet (round-trip time and packet loss) on a dashboard that gets updated every 5 seconds!  Neat, huh?
+
+
+### Other dashboards
+
+Here are a few other dashboards which show details about the running system:
+
 - [Syslog Volume](http://localhost:3000/d/fponVrV7z/syslog-volume) - Covers syslog, synthetic logs, and ping events.
 - [Docker Logs](http://localhost:3000/d/RQVYi6V7k/docker-logs) - This playground ingests logs from its own Docker containers, which can be viewed here.
 - [Loki Stats](http://localhost:3000/d/ZDiuJmN7k/loki-stats) - Statistics on the Loki Database
@@ -143,6 +154,31 @@ More about how to configure the Docker Loki plugin [can be read here](https://gr
   - `docker-compose kill logs; docker-compose rm -f logs; docker-compose build logs && docker-compose up logs`
 - Working on the `promtail` container
   - `docker-compose kill promtail; docker-compose rm -f promtail; docker-compose build promtail && docker-compose up promtail`
+
+
+
+## What Comes Next?
+
+If you made it here, congrats, you now have a pretty thorough understanding of the Grafana Ecosystem and Loki!
+Maybe you could submit a PR to help me with my TODO list. :-)
+
+
+## TODO List
+
+- More metrics?
+  - Temperature in Philadelphia?
+  - BitCoin price? (Ew...)
+  - Fake webserver logs with [flog](https://github.com/mingrammer/flog) or similar...?
+- System metrics?
+  - Can I run node_exporter or Telegraf and get metrics from the system itself?
+- Alerta integration?
+- Slack integration?
+- Clustering with Loki?
+
+
+## Credits
+
+- [This blog post](https://avleonov.com/2020/06/10/how-to-list-create-update-and-delete-grafana-dashboards-via-api/) by Alexander V. Leonov that talks about how to use the Grafana API.
 
 
 
