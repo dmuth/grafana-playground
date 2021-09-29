@@ -19,8 +19,8 @@ def getArgs():
 	parser = argparse.ArgumentParser(description = "Export and import Grafana dashboards")
 	parser.add_argument("--api-key", required = True, 
 		help = "The Grafana API key.  Can be Generated in Grafana at: Configuration -> API Keys")
-	parser.add_argument("--url", default ="http://localhost:3000/",
-		help = "Base URL for a Grafana sever. Defaults to http://localhost:3000/")
+	parser.add_argument("--url", default ="http://grafana:3000/",
+		help = "Base URL for a Grafana sever. Defaults to http://grafana:3000/")
 
 	args = parser.parse_args()
 	return(args)

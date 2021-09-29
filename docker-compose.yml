@@ -16,6 +16,17 @@ services:
     restart: "always"
 
   #
+  # Tool container for importing/exporting dashboards.
+  #
+  tools:
+    build:
+      context: docker/tools
+      dockerfile: "Dockerfile"
+    volumes:
+      - .:/mnt
+    restart: "always"
+
+  #
   # Container to continuously ping hosts.
   #
   ping:
