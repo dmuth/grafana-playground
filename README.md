@@ -19,24 +19,40 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
 - http://localhost:9081/targets - Targets page for the (Dockerized) instance of promtail.
 
 
-## Viewing Logs
+## Importing Dashbaords
 
 - To acccess the Grafana instance, go to [http://localhost:3000/](http://localhost:3000/)
   - Log in with username of `admin` and the password of `admin`.  Change the password if you wish.
-- Hover over the `Gear` icon on the left, click `Data sources`
-  - Click `Add data source`.
-  - Choose `Loki` from the list.
-  - For the URL, enter `http://loki:3100/`
-  - Click `Save and Test`
-- Hover over the plus sign (`+`) on the left, click `Import`.
-  - Click `Upload JSON file`
-    - Navgiate to the file `config/dashboards/log-volume-dashboard.json`, then click `Import`.
-    - Repeat with `config/log-volume-dashboard-docker-containers.json`
-    - Repeat with `config/dashboards/ping-results.json`
-- You now have the following dashboards available:
-  - [Ping Reuslts](http://localhost:3000/d/WiThvuS7z/ping-results?orgId=1) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
-  - [Volume by Logfile](http://localhost:3000/d/fponVrV7z/log-volume?orgId=1) - Covers syslog, synthetic logs, and ping events.
-  - [Volume by Docker container](http://localhost:3000/d/RQVYi6V7k/log-volume-docker-containers?orgId=1) - This playground ingests logs from its own Docker containers, which can be viewed here.
+- Hover over the gear icon on the left side of the screen and choose `API Keys`
+- Create a new API key with admin access and copy the API key to your clipboard
+- Set up data sources and import dashboards from this playground with this command:
+  - `docker-compose run tools /bootstrap.sh API_KEY`
+- You can now verify that your data sources and dashboards have been loaded:
+  - [Data Sources](http://localhost:3000/datasources)
+  - [Dashboards](http://localhost:3000/dashboards)
+
+
+## Viewing Dashboards
+
+You now have the following dashboards available:
+
+- [Ping Reuslts](http://localhost:3000/d/WiThvuS7z/ping-results) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
+- [Syslog Volume](http://localhost:3000/d/fponVrV7z/syslog-volume) - Covers syslog, synthetic logs, and ping events.
+- [Docker Logs](http://localhost:3000/d/RQVYi6V7k/docker-logs) - This playground ingests logs from its own Docker containers, which can be viewed here.
+- [Loki Stats](http://localhost:3000/d/ZDiuJmN7k/loki-stats) - Statistics on the Loki Database
+- [Promtail Stats](http://localhost:3000/d/Xp2dJmH7k/promtail-stats) - Statistics on the Promtail instance   
+
+
+## Exporting Dashboards
+
+- If you want to export your current set of dashboards (including any changes made) to disk, first you'll need launch a shell in the tools container:
+  - `docker-compose exec tools bash`
+- Now, using your API key, run the script to export dashboards into `dashboards.json` in the current directory:
+  - `/mnt/bin/manage-dashboards.py --api-key API_KEY > /mnt/dashbaords.json`
+
+
+## Running Ad-hoc Queries
+
 - To run a specific query, click the `Compass` on the left which pouts you into `Explorer Mode`.
   - Then paste in this query: `{ filename=~"/logs/synthetic/.*" }`.
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.

@@ -149,7 +149,7 @@ def import_dashboards(url, api_key, dashboards):
 
 		r = requests.post(url = url_import, headers = headers, 
 			data = json.dumps(new_dashboard))
-		stderr(f"Importing dashboard uid={uid} id={id} title={title}...")
+		stderr(f"# Importing dashboard uid={uid} id={id} title={title}...")
 
 		if r.status_code == 404:
 			stderr(f"Dashboard uid {uid} not found, let's create it instead!")
@@ -160,9 +160,9 @@ def import_dashboards(url, api_key, dashboards):
 				data = json.dumps(new_dashboard))
 
 		elif r.status_code != 200:
-			raise Exception(f"Status code {r.status_code} != 200 for URL '{url_import}'!  Message returned: {r.text}")
+			raise Exception(f"! Status code {r.status_code} != 200 for URL '{url_import}'!  Message returned: {r.text}")
 
-		stderr(f"Imported dashboard '{new_dashboard['dashboard']['title']}' " + 
+		stderr(f"# Imported dashboard '{new_dashboard['dashboard']['title']}' " + 
 				f"(uid {uid}), "
 				+ f"results: {r.text}")
 
