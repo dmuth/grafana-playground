@@ -7,6 +7,7 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - Loki, for storing time series logs
 - Prometheus, for storing time series metrics
 - `ping`, a container which pings multiple hosts, using the excellent [https://cr.yp.to/daemontools.html](Daemontools package) to handle multiple instances of ping running at once.  Those results are sent to Loki and can be viewed with an included dashboard.
+- `telegraf`, a utility for reading system metrics, which it will then feed into both Grafana and Loki. ([Telegraf website](https://www.influxdata.com/time-series-platform/telegraf/))
 - A Docker container called `logs`, which automatically generates synthetic log entries.
 - Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
 
@@ -51,7 +52,8 @@ Here are a few other dashboards which show details about the running system:
 - [Syslog Volume](http://localhost:3000/d/fponVrV7z/syslog-volume) - Covers syslog, synthetic logs, and ping events.
 - [Docker Logs](http://localhost:3000/d/RQVYi6V7k/docker-logs) - This playground ingests logs from its own Docker containers, which can be viewed here.
 - [Loki Stats](http://localhost:3000/d/ZDiuJmN7k/loki-stats) - Statistics on the Loki Database
-- [Promtail Stats](http://localhost:3000/d/Xp2dJmH7k/promtail-stats) - Statistics on the Promtail instance   
+- [Promtail Stats](http://localhost:3000/d/Xp2dJmH7k/promtail-stats) - Statistics on the Promtail instance
+- [Docker Host Stats](http://localhost:3000/d/xHVqHGv7k/docker-host-stats-prometheus) - System Metrics from Prometheus (fed in by Telegraf)
 
 
 ## Exporting Dashboards
@@ -179,6 +181,8 @@ Maybe you could submit a PR to help me with my TODO list. :-)
 ## Credits
 
 - [This blog post](https://avleonov.com/2020/06/10/how-to-list-create-update-and-delete-grafana-dashboards-via-api/) by Alexander V. Leonov that talks about how to use the Grafana API.
+- [Telegraf & Prometheus Swiss Army Knife for Metrics](https://blog.nobugware.com/post/2016/telegraf_prometheus_metrics_swiss_army_knife/) - by Fabrice Aneche that helped me get started with Telegraf and reading the data from Prometheus.
+
 
 
 
