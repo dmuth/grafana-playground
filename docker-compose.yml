@@ -63,6 +63,17 @@ services:
       - "9081:9080"
     restart: "always"
 
+
+  #
+  # Telegraf reads system metrics, and will expose them to Prometheus and send them to Loki
+  #
+  telegraf:
+    image: telegraf:1.20
+    volumes:
+      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf
+    restart: "always"
+
+
   #
   # The Loki database for storing logs.
   #
