@@ -7,6 +7,7 @@
 set -e
 
 LOGDIR="/logs/ping"
+SRC="/run.IN"
 
 #
 # If no hosts were specified, set some sensible defaults.
@@ -39,7 +40,6 @@ function createService() {
 	mkdir -p ${NAME}
 	cd ${NAME}
 
-
 	#
 	# Create our script which pings the specified host for 1 hour, 
 	# prepends human-readable timestamps, and writes that all to 
@@ -50,18 +50,9 @@ function createService() {
 	#
 	NUM_PINGS=3600
 	#NUM_PINGS=5 # Debugging
-	echo "#!/bin/bash" >> run
-	echo "cd \$(dirname \$0)" >> run
 
-	#
-	# Rotate the old logfile.  We do this in case promtail isn't finished reading it.
-	#
-	echo "mv -f ${LOG} ${LOG}.OLD || true" >> run
-
-	echo "/iputils/ping ${NAME} -c ${NUM_PINGS} 2>&1 | tai64n | tai64nlocal >> ${LOG}" >> run
+	cat ${SRC} | sed -e "s|%LOG%|${LOG}|g" -e "s/%NAME%/${NAME}/" -e "s/%NUM_PINGS%/${NUM_PINGS}/" > run
 	chmod 755 run
-	#ls -l # Debugging
-	#cat run # Debugging
 
 	echo "# Created service for pinging ${NAME}!"
 

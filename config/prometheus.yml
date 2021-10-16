@@ -40,4 +40,8 @@ scrape_configs:
     static_configs:
       - targets: ["telegraf:9273"]
 
+  - job_name: "ping-metrics"
+    static_configs:
+      - targets: ["ping-metrics:8080"]
+
 
