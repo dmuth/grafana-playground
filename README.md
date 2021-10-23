@@ -7,11 +7,10 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - Grafana, for graphing
 - Loki, for storing time series logs
 - Prometheus, for storing time series metrics
-- `ping`, a container which pings multiple hosts, using the excellent [Daemontools package](https://cr.yp.to/daemontools.html)
-to handle multiple instances of ping running at once.  Those results are sent to Loki and can be viewed with an included dashboard.
+- `ping`, a container which pings multiple hosts
 - `telegraf`, a utility for reading system metrics, which it will then feed into both Grafana and Loki. ([Telegraf website](https://www.influxdata.com/time-series-platform/telegraf/))
 - A Docker container called `logs`, which automatically generates synthetic log entries.
-- Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
+- Promtail, for reading in the generated logs, output of `ping`, as well as the contents of `/var/log/`. All logs are sent off to loki.
 - [A script](docker/ping-metrics/python-prometheus-metrics.py) which implements `tail -F` in Python. ([Stand alone demo script here](docker/ping-metrics/python-tail-logs.py))
 
 
@@ -168,6 +167,23 @@ More about how to configure the Docker Loki plugin [can be read here](https://gr
 - There are some label extractions in `config/promtail-config-docker.yaml` which are commented out.
   - Feel free to uncomment them if you want to expirment with labels, but be advised the number of streams is the *product* of how many different label values you can have, which can cause performance issues.  That is explained more [in this post](https://grafana.com/blog/2020/08/27/the-concise-guide-to-labels-in-loki/)
   - TL;DR If you go crazy with labels and try to Index a high-cardinality field, you're gonna have a bad time!
+
+
+## Frequently Asked Questions (FAQ)
+
+#### Q: How are you pinging multiple hosts in the `ping` container? Are you running multiple copies of `ping`?
+
+A: Yes, I am.  I used the excellent [Daemontools package](https://cr.yp.to/daemontools.html) to a separate service for each host that is being pinged.  Daemontools handles restarting of ping when it exits in a safe and sane way.
+
+#### Q: But why multiple processes in a single container?  That's not a best practice in Docker!
+
+A: It was a judgement call, I felt that if I was pinging say, 10 different hosts, having 10 different containers all doing the same function would be a little unwieldly.  Instead, it made more sense to me to keep all of that functionality under a single container.
+
+#### Q: I see you're getting packet loss stats every 10 seconds.  What about the overhead in stopping and starting a `ping` process every 10 seconds?
+
+A: That's not an issue, because I don't do that. :-)  Instead, [I hacked the ping utility](https://github.com/dmuth/iputils), and added in some code to print out the number of packets sent/received every 10 seconds.  [My script that parses those values](docker/ping-metrics/python-prometheus-metrics.py) then computes a packet loss value, and exports it to Prometheus. (For Loki, the packet loss is computed at query time with LogQL)
+
+I used this technique before for [my Splunk network health app](https://github.com/dmuth/splunk-network-health-check) and it works quite well.
 
 
 ## Development
