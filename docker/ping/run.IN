@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# This script runs our ping for a set amount of time and then exits.
+#
+
+#
+# Change to the directory of this service.
+#
+cd $(dirname $0)
+
+#
+# Rotate the old logfile.  We do this in case promtail isn't finished reading it.
+#
+mv -f %LOG% %LOG%.OLD || true
+
+/iputils/ping %NAME% -c %NUM_PINGS% 2>&1 | tai64n | tai64nlocal >> %LOG%
+
+

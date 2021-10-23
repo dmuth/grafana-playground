@@ -24,6 +24,7 @@ services:
       dockerfile: "Dockerfile"
     volumes:
       - .:/mnt
+      - logs:/logs/
     restart: "always"
 
   #
@@ -47,6 +48,19 @@ services:
     volumes:
       - logs:/logs/
     restart: "always"
+
+  #
+  # Get metrics from ping logs for Prometheus.
+  #
+  ping-metrics:
+    build:
+      context: docker/ping-metrics
+      dockerfile: "Dockerfile"
+    volumes:
+      - .:/mnt
+      - logs:/logs/
+    restart: "always"
+
 
   #
   # Read logs from files and ingest into Loki.

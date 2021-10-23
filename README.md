@@ -1,37 +1,37 @@
 
 # Grafana Playground
+<a href="/img/ping-results-loki-top.png"><img src="./img/ping-results-loki-top.png" align="right" width="300" /></a>
 
 This is a little project I put together that lets you spin up a Grafana ecosystem in Docker and automatically feed in syslogs to the Loki database and metrics to the Prometheus database.  That environment includes:
 
 - Grafana, for graphing
 - Loki, for storing time series logs
 - Prometheus, for storing time series metrics
-- `ping`, a container which pings multiple hosts, using the excellent [https://cr.yp.to/daemontools.html](Daemontools package) to handle multiple instances of ping running at once.  Those results are sent to Loki and can be viewed with an included dashboard.
+- `ping`, a container which pings multiple hosts, using the excellent [Daemontools package](https://cr.yp.to/daemontools.html)
+to handle multiple instances of ping running at once.  Those results are sent to Loki and can be viewed with an included dashboard.
 - `telegraf`, a utility for reading system metrics, which it will then feed into both Grafana and Loki. ([Telegraf website](https://www.influxdata.com/time-series-platform/telegraf/))
 - A Docker container called `logs`, which automatically generates synthetic log entries.
 - Promtail, for reading in the generated logs, as well as the contents of `/var/log/`.
+- [A script](docker/ping-metrics/python-prometheus-metrics.py) which implements `tail -F` in Python. ([Stand alone demo script here](docker/ping-metrics/python-tail-logs.py))
 
 
 ## Getting Started
 
-Run `docker-compose up` and this will spin up each of the containers mentioned above, making the following endpoints available:
+- Run `docker-compose up` to start up the environment.
+- Go to http://localhost:3000/ and log into Grafana with login/pass of `admin/admin`.
+- [Create an API with Admin access](http://localhost:3000/org/apikeys)
+- Spawn a shell in the `tools` container and import the dashboards into Grafana
+  - `docker-compose exec tools bash`
+  - `cat /mnt/config/dashboards.json | /mnt/bin/manage-dashboards.py --import --api-key API_KEY`
+  - Type `exit` to exit the shell in that container
+- At this point, your Data Source (Loki and Prometheus) and Dashboards have been loaded, with the latter available at http://localhost:3000/dashboards.
+
+
+## List of Endpoints
 
 - http://localhost:3000/ - Local Grafana instance. Login and pass are `admin/admin`.
 - http://localhost:3100/ - Local Loki instance.  Check http://localhost:3100/ready to see if the instance is ready.
 - http://localhost:9081/targets - Targets page for the (Dockerized) instance of promtail.
-
-
-## Importing Dashbaords
-
-- To acccess the Grafana instance, go to [http://localhost:3000/](http://localhost:3000/)
-  - Log in with username of `admin` and the password of `admin`.  Change the password if you wish.
-- Hover over the gear icon on the left side of the screen and choose `API Keys`
-- Create a new API key with admin access and copy the API key to your clipboard
-- Set up data sources and import dashboards from this playground with this command:
-  - `docker-compose run tools /bootstrap.sh API_KEY`
-- You can now verify that your data sources and dashboards have been loaded:
-  - [Data Sources](http://localhost:3000/datasources)
-  - [Dashboards](http://localhost:3000/dashboards)
 
 
 ## Viewing Dashboards
@@ -40,7 +40,7 @@ Run `docker-compose up` and this will spin up each of the containers mentioned a
 
 Look, just start with the ping dashboard, okay?
 
-- [Ping Reuslts](http://localhost:3000/d/WiThvuS7z/ping-results) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
+- [Ping Results](http://localhost:3000/d/WiThvuS7z/ping-results) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
 
 Yeah, so you loaded the dashboard, and it's showing the results of pinging multiple hosts on the Internet (round-trip time and packet loss) on a dashboard that gets updated every 5 seconds!  Neat, huh?
 
@@ -49,6 +49,7 @@ Yeah, so you loaded the dashboard, and it's showing the results of pinging multi
 
 Here are a few other dashboards which show details about the running system:
 
+- [Ping Results, but from Prometheus](http://localhost:3000/d/WQwTEyd7z/ping-results-from-prometheus) - Similar to the original ping dashboard, this pulls metrics from Prometheus, which are aggregated, and the results will be in lower resolution.
 - [Syslog Volume](http://localhost:3000/d/fponVrV7z/syslog-volume) - Covers syslog, synthetic logs, and ping events.
 - [Docker Logs](http://localhost:3000/d/RQVYi6V7k/docker-logs) - This playground ingests logs from its own Docker containers, which can be viewed here.
 - [Loki Stats](http://localhost:3000/d/ZDiuJmN7k/loki-stats) - Statistics on the Loki Database
@@ -61,17 +62,20 @@ Here are a few other dashboards which show details about the running system:
 - If you want to export your current set of dashboards (including any changes made) to disk, first you'll need launch a shell in the tools container:
   - `docker-compose exec tools bash`
 - Now, using your API key, run the script to export dashboards into `dashboards.json` in the current directory:
-  - `/mnt/bin/manage-dashboards.py --api-key API_KEY > /mnt/dashbaords.json`
+  - `/mnt/bin/manage-dashboards.py --export --api-key API_KEY > /mnt/dashboards.json`
+  - If you get an HTTP 401 error, it means your API key was invalid.
 
 
 ## Running Ad-hoc Queries
 
-- To run a specific query, click the `Compass` on the left which pouts you into `Explorer Mode`.
+- To run a specific query, click the `Compass` on the left which puts you into `Explorer Mode`.
   - Then paste in this query: `{ filename=~"/logs/synthetic/.*" }`.
   - That should immediately show you the most recent logs that have been written. If this shows nothing, then data is not making it into Loki.
 
 
 ## Manually Injecting Logs
+
+<a href="./img/synthetic-logs-loki.png"><img src="./img/synthetic-logs-loki.png" align="right" width="300" /></a>
 
 If you want to manually inject an arbitrary number of logs, that can be done with this command:
 
@@ -94,6 +98,8 @@ in Grafana with this query:
 
 ## Considerations for Mac Users
 
+<a href="./img/syslog-volume.png"><img src="./img/syslog-volume.png" align="right" width="300" /></a>
+
 For whatever reason, I have not had any luck mapping `/var/log/` on my Mac to a Docker container.  
 I tried a bunch of different things, but no luck.  I ended up coming up with a workaround, which
 is to install and run Promtail locally:
@@ -114,6 +120,19 @@ If you want to query Loki directly, I write a command-line script for that:
     - `./bin/query.sh '{job="varlogs",filename="/var/log/system.log"}'`
     - `./bin/query.sh '{job="varlogs",filename=~"/var.*"}'`
     - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
+
+
+## List of Docker Containers and Their Functions
+
+- `ping` - Pings one or more hosts continuously and writes the results to logfiles in a Docker voluem
+- `ping-metrics` - Reads ping's logfiles and exports them to Prometheus via a webserver.
+- `prometheus` - Promtheus instance
+- `tools` - Container to run tools from.  It normally does nothing, to make use of it run `docker-compose exec tools bash` to spawn a shell, at which point the rest of the environment can be talked to using the container name as hostname.
+- `grafana` - Grafana instance.
+- `logs` - Container to make fake logs for testing Loki.
+- `loki` - Loki instance.
+- `promtail` - Tails `/var/log/` on the host filesystem.  Note that this will not work correctly on a Mac.
+- `telegraf` - Telegraf instance which exports system metrics to Prometheus.
 
 
 ## Sending Docker Logs to Loki
@@ -145,6 +164,7 @@ More about how to configure the Docker Loki plugin [can be read here](https://gr
 
 - For Loki, I set `min_ready_duration` to be 5 seconds so that the database is ready quicker.
   - I would not recommend this setting for production use.
+- Loki is not configured to save logs to S3 or any other object store--everything is on the local disk.
 - There are some label extractions in `config/promtail-config-docker.yaml` which are commented out.
   - Feel free to uncomment them if you want to expirment with labels, but be advised the number of streams is the *product* of how many different label values you can have, which can cause performance issues.  That is explained more [in this post](https://grafana.com/blog/2020/08/27/the-concise-guide-to-labels-in-loki/)
   - TL;DR If you go crazy with labels and try to Index a high-cardinality field, you're gonna have a bad time!
@@ -167,14 +187,15 @@ Maybe you could submit a PR to help me with my TODO list. :-)
 
 ## TODO List
 
+- Alerts!
+  - Alerta integration?
+  - Slack integration?
 - More metrics?
   - Temperature in Philadelphia?
   - BitCoin price? (Ew...)
   - Fake webserver logs with [flog](https://github.com/mingrammer/flog) or similar...?
 - System metrics?
   - Can I run node_exporter or Telegraf and get metrics from the system itself?
-- Alerta integration?
-- Slack integration?
 - Clustering with Loki?
 
 
@@ -182,6 +203,10 @@ Maybe you could submit a PR to help me with my TODO list. :-)
 
 - [This blog post](https://avleonov.com/2020/06/10/how-to-list-create-update-and-delete-grafana-dashboards-via-api/) by Alexander V. Leonov that talks about how to use the Grafana API.
 - [Telegraf & Prometheus Swiss Army Knife for Metrics](https://blog.nobugware.com/post/2016/telegraf_prometheus_metrics_swiss_army_knife/) - by Fabrice Aneche that helped me get started with Telegraf and reading the data from Prometheus.
+- [Prometheus Metrics and Instrumentation](https://sysdig.com/blog/prometheus-metrics/) - I learned how to build a Python-based webserver to export metrics to Prometheus with this post.
+- [prometheus-client module for Python](https://github.com/prometheus/client_python)
+- [How Does a Prometheus Summary Work?](https://www.robustperception.io/how-does-a-prometheus-summary-work)
+
 
 
 

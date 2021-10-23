@@ -35,6 +35,7 @@ RUN apt install -y procps
 #
 COPY --from=builder /iputils/ping /iputils/ping
 
+COPY run.IN /
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

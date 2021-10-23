@@ -3,6 +3,9 @@
 *.swp
 *~
 
+# Steve Jobs
+.DS_Store 
+
 #
 # Don't include Promtail's offset tracking files.
 #
