@@ -29,6 +29,7 @@ scrape_configs:
       #
       __path__: /var/log/*.log
 
+
 - job_name: synthetic
   static_configs:
     - targets:
@@ -65,6 +66,7 @@ scrape_configs:
             format: UnixDate
             source: timestamp
 
+
 - job_name: ping
   static_configs:
     - targets:
@@ -72,7 +74,6 @@ scrape_configs:
       labels:
         job: logs-ping
         __path__: /logs/ping/*.log
-
 
   pipeline_stages:
   - match:
@@ -89,5 +90,31 @@ scrape_configs:
             #
             format: "2006-01-02 15:04:05.999999999"
                     
+
+- job_name: septa
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: logs-septa
+        __path__: /logs/septa/*.log
+
+  pipeline_stages:
+  - match:
+      selector: '{job="logs-septa"}'
+      stages:
+        - regex:
+            expression: '(?P<timestamp>(\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2}))' 
+        - regex:
+            expression: '"line": "(?P<line>[^"]+)"'
+        - labels:
+            #test_timestamp: timestamp
+            line: line
+        - timestamp:
+            source: timestamp
+            #
+            # This is a custom format
+            #
+            format: "20060102T15040"
 
 
