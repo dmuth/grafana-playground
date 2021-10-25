@@ -63,6 +63,19 @@ services:
 
 
   #
+  # Container to read metrics from SEPTA Regional Rail.
+  #
+  septa:
+    build:
+      context: docker/septa
+      dockerfile: "Dockerfile"
+    volumes:
+      - .:/mnt
+      - logs:/logs/
+    restart: "always"
+
+
+  #
   # Read logs from files and ingest into Loki.
   #
   promtail:

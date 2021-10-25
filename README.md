@@ -1,6 +1,6 @@
 
 # Grafana Playground
-<a href="/img/ping-results-loki-top.png"><img src="./img/ping-results-loki-top.png" align="right" width="300" /></a>
+<a href="./img/ping-results-loki-top.png"><img src="./img/ping-results-loki-top.png" align="right" width="300" /></a>
 
 This is a little project I put together that lets you spin up a Grafana ecosystem in Docker and automatically feed in syslogs to the Loki database and metrics to the Prometheus database.  That environment includes:
 
@@ -8,6 +8,7 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - Loki, for storing time series logs
 - Prometheus, for storing time series metrics
 - `ping`, a container which pings multiple hosts
+- `septa`, a container which [pulls train data from SETPA's API](http://www3.septa.org/api/)
 - `telegraf`, a utility for reading system metrics, which it will then feed into both Grafana and Loki. ([Telegraf website](https://www.influxdata.com/time-series-platform/telegraf/))
 - A Docker container called `logs`, which automatically generates synthetic log entries.
 - Promtail, for reading in the generated logs, output of `ping`, as well as the contents of `/var/log/`. All logs are sent off to loki.
@@ -15,6 +16,8 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 
 
 ## Getting Started
+
+<a href="./img/septa-regional-rail.png"><img src="./img/septa-regional-rail.png" align="right" width="300" /></a>
 
 - Run `docker-compose up` to start up the environment.
 - Go to http://localhost:3000/ and log into Grafana with login/pass of `admin/admin`.
@@ -54,6 +57,7 @@ Here are a few other dashboards which show details about the running system:
 - [Loki Stats](http://localhost:3000/d/ZDiuJmN7k/loki-stats) - Statistics on the Loki Database
 - [Promtail Stats](http://localhost:3000/d/Xp2dJmH7k/promtail-stats) - Statistics on the Promtail instance
 - [Docker Host Stats](http://localhost:3000/d/xHVqHGv7k/docker-host-stats-prometheus) - System Metrics from Prometheus (fed in by Telegraf)
+- [SEPTA Regional Rail Stats](http://localhost:3000/d/U2n119O7z/septa-regional-rail) - Stats on [SEPTA Regional Rail](http://www.septa.org/service/rail/)
 
 
 ## Exporting Dashboards
@@ -113,25 +117,26 @@ If you want to query Loki directly, I write a command-line script for that:
 
 - `./bin/query.sh` - Query the Dockerized instance of Loki on the command line.
   - Examples:
-    - `./bin/query.sh '{job="varlogs"}'`
-    - `./bin/query.sh '{job="varlogs"}' 5`
-    - `./bin/query.sh '{job="varlogs",host="docker"}'`
-    - `./bin/query.sh '{job="varlogs",filename="/var/log/system.log"}'`
-    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"}'`
-    - `./bin/query.sh '{job="varlogs",filename=~"/var.*"} 10'`
+    - `./bin/query.sh '{job="logs-ping"}'`
+    - `./bin/query.sh '{job="logs-ping"}' 5`
+    - `./bin/query.sh '{job="logs-ping",host="docker"}'`
+    - `./bin/query.sh '{job="logs-ping",filename="/logs/ping/google.com.log"}'`
+    - `./bin/query.sh '{job="logs-ping",filename=~"/logs/ping.*"}'`
+    - `./bin/query.sh '{job="logs-ping",filename=~"/logs/ping.*"}' 10`
 
 
 ## List of Docker Containers and Their Functions
 
 - `ping` - Pings one or more hosts continuously and writes the results to logfiles in a Docker voluem
 - `ping-metrics` - Reads ping's logfiles and exports them to Prometheus via a webserver.
+- `septa` - Pulls Regionail Rail train data from SEPTA's API once a minute and writes it to a log for ingestion by Loki.
 - `prometheus` - Promtheus instance
-- `tools` - Container to run tools from.  It normally does nothing, to make use of it run `docker-compose exec tools bash` to spawn a shell, at which point the rest of the environment can be talked to using the container name as hostname.
 - `grafana` - Grafana instance.
 - `logs` - Container to make fake logs for testing Loki.
 - `loki` - Loki instance.
-- `promtail` - Tails `/var/log/` on the host filesystem.  Note that this will not work correctly on a Mac.
 - `telegraf` - Telegraf instance which exports system metrics to Prometheus.
+- `promtail` - Tails logs from various other containers, as well as `/var/log/` on the host filesystem.
+- `tools` - Container to run tools from.  It normally does nothing, to make use of it run `docker-compose exec tools bash` to spawn a shell, at which point the rest of the environment can be talked to using the container name as hostname.
 
 
 ## Sending Docker Logs to Loki
