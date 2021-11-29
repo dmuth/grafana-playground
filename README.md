@@ -22,9 +22,10 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - Run `docker-compose up` to start up the environment.
 - Go to http://localhost:3000/ and log into Grafana with login/pass of `admin/admin`.
 - [Create an API with Admin access](http://localhost:3000/org/apikeys)
-- Spawn a shell in the `tools` container and import the dashboards into Grafana
+- Spawn a shell in the `tools` container and import the dashboards and data sources into Grafana
   - `docker-compose exec tools bash`
   - `cat /mnt/config/dashboards.json | /mnt/bin/manage-dashboards.py --import --api-key API_KEY`
+  - `/mnt/bin/manage-data-sources.py --api-key API_KEY`
   - Type `exit` to exit the shell in that container
 - At this point, your Data Source (Loki and Prometheus) and Dashboards have been loaded, with the latter available at http://localhost:3000/dashboards.
 
