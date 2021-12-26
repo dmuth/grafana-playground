@@ -39,14 +39,15 @@ services:
       # Host to ping.  Can be hostname or IP.  Space-delimited.
       # Note that DNS lookups may fail, so consider pinging some IPs...
       #
-      HOSTS: "google.com amazon.com 8.8.8.8 1.1.1.1"
+      HOSTS: "google.com amazon.com google-dns cloudflare-dns "
       #
       # Comment the previous line and uncomment this one if you'd like to ping 
       # some hosts on different continents.
       #
-      #HOSTS: "google.com amazon.com 8.8.8.8 1.1.1.1 cheetah.jp leopard.se"
+      #HOSTS: "google.com amazon.com google-dns cloudflare-dns cheetah.jp leopard.se"
     volumes:
       - logs:/logs/
+      - ./hosts.txt:/etc/hosts
     restart: "always"
 
   #

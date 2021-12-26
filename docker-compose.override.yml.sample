@@ -14,6 +14,8 @@ services:
         loki-url: http://host.docker.internal:3100/loki/api/v1/push
 
   ping:
+    #environment:
+      #HOSTS: "google.com amazon.com google-dns cloudflare-dns "
     logging:
       driver: loki
       options:
