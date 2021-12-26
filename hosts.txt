@@ -1,0 +1,10 @@
+#
+# This file is copied to /etc/hosts in the ping container.
+#
+127.0.0.1	localhost
+1.1.1.1		cloudflare-dns
+8.8.8.8		google-dns
+
+#192.168.1.1 router
+#10.0.0.1		router
+
