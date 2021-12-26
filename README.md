@@ -61,6 +61,15 @@ Here are a few other dashboards which show details about the running system:
 - [SEPTA Regional Rail Stats](http://localhost:3000/d/U2n119O7z/septa-regional-rail) - Stats on [SEPTA Regional Rail](http://www.septa.org/service/rail/)
 
 
+## Pinging Additional Hosts
+
+- Optionally edit the file `hosts.txt` to add human-readable names for IP addresses.
+- Copy `docker-compose.override.yml.sample` to `docker-compose.override.yml`.
+- Uncomment the `environment:` and `HOSTS:` keys.
+- Add additional hosts or IPs into `HOSTS:` as you see fit.
+- Restart the `ping` container with `docker-compose kill ping; docker-compose rm -f ping; docker-compose up -d ping`.
+
+
 ## Exporting Dashboards
 
 - If you want to export your current set of dashboards (including any changes made) to disk, first you'll need launch a shell in the tools container:
