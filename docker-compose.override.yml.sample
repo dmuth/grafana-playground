@@ -15,7 +15,7 @@ services:
 
   ping:
     #environment:
-      #HOSTS: "google.com amazon.com google-dns cloudflare-dns "
+      #HOSTS: "google.com amazon.com google-dns-4 google-dns-8 quad9 router-192-168-1-1 router-10-0-0-1"
     logging:
       driver: loki
       options:
