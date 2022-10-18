@@ -24,8 +24,9 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - [Create an API with Admin access](http://localhost:3000/org/apikeys)
 - Spawn a shell in the `tools` container and import the dashboards and data sources into Grafana
   - `docker-compose exec tools bash`
-  - `cat /mnt/config/dashboards.json | /mnt/bin/manage-dashboards.py --import --api-key API_KEY`
-  - `/mnt/bin/manage-data-sources.py --api-key API_KEY`
+  - `export API_KEY=YOUR_API_KEY
+  - `cat /mnt/config/dashboards.json | /mnt/bin/manage-dashboards.py --import --api-key ${API_KEY}`
+  - `/mnt/bin/manage-data-sources.py --api-key ${API_KEY}`
   - Type `exit` to exit the shell in that container
 - At this point, your Data Source (Loki and Prometheus) and Dashboards have been loaded, with the latter available at http://localhost:3000/dashboards.
 
@@ -75,8 +76,11 @@ Here are a few other dashboards which show details about the running system:
 - If you want to export your current set of dashboards (including any changes made) to disk, first you'll need launch a shell in the tools container:
   - `docker-compose exec tools bash`
 - Now, using your API key, run the script to export dashboards into `dashboards.json` in the current directory:
-  - `/mnt/bin/manage-dashboards.py --export --api-key API_KEY > /mnt/dashboards.json`
+  - `export API_KEY=YOUR_API_KEY
+  - `/mnt/bin/manage-dashboards.py --export --api-key ${API_KEY} > /mnt/dashboards.json`
   - If you get an HTTP 401 error, it means your API key was invalid.
+- Exit the container and move the `dashboards.json` file into the `config/` directory:
+  - `mv dashboards.json config/dashboards.json`
 
 
 ## Running Ad-hoc Queries
@@ -207,7 +211,8 @@ I used this technique before for [my Splunk network health app](https://github.c
   - `docker-compose kill logs; docker-compose rm -f logs; docker-compose build logs && docker-compose up logs`
 - Working on the `promtail` container
   - `docker-compose kill promtail; docker-compose rm -f promtail; docker-compose build promtail && docker-compose up promtail`
-
+- Updating Dashboards
+  - See the `Exporting Dashboards` and `Getting Started` sections above
 
 
 ## What Comes Next?
