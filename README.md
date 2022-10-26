@@ -24,7 +24,7 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 - [Create an API with Admin access](http://localhost:3000/org/apikeys)
 - Spawn a shell in the `tools` container and import the dashboards and data sources into Grafana
   - `docker-compose exec tools bash`
-  - `export API_KEY=YOUR_API_KEY
+  - `export API_KEY=YOUR_API_KEY`
   - `cat /mnt/config/dashboards.json | /mnt/bin/manage-dashboards.py --import --api-key ${API_KEY}`
   - `/mnt/bin/manage-data-sources.py --api-key ${API_KEY}`
   - Type `exit` to exit the shell in that container
