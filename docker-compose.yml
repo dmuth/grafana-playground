@@ -80,7 +80,8 @@ services:
   # Read logs from files and ingest into Loki.
   #
   promtail:
-    image: grafana/promtail:2.3.0
+    #image: grafana/promtail:2.3.0
+    image: grafana/promtail:latest
     volumes:
       - logs:/logs/
       - ./config:/mnt/config
@@ -106,7 +107,9 @@ services:
   # The Loki database for storing logs.
   #
   loki:
-    image: grafana/loki:2.3.0
+    #image: grafana/loki:2.3.0
+    #image: grafana/loki:2.6.1
+    image: grafana/loki:latest
     volumes:
       - ./config:/mnt/config
       - ./data/loki-data:/tmp/loki

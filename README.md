@@ -19,6 +19,7 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 
 <a href="./img/septa-regional-rail.png"><img src="./img/septa-regional-rail.png" align="right" width="300" /></a>
 
+- `cp hosts.txt.sample hosts.txt` to set up your `hosts.txt` file
 - Run `docker-compose up` to start up the environment.
 - Go to http://localhost:3000/ and log into Grafana with login/pass of `admin/admin`.
 - [Create an API with Admin access](http://localhost:3000/org/apikeys)
@@ -45,6 +46,7 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 Look, just start with the ping dashboard, okay?
 
 - [Ping Results](http://localhost:3000/d/WiThvuS7z/ping-results) - Shows ping time and packet loss for specified hosts.  The hosts can be changed.
+  - Additionally, any hostname (as defined in `hosts.txt`) that starts with `internal-` will be excluded from the aggregate ping dashbaord.  This makes tracking Internet outages easier.
 
 Yeah, so you loaded the dashboard, and it's showing the results of pinging multiple hosts on the Internet (round-trip time and packet loss) on a dashboard that gets updated every 5 seconds!  Neat, huh?
 

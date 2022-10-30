@@ -81,8 +81,10 @@ scrape_configs:
       stages:
         - regex:
             expression: '(?P<timestamp>(\d+-\d+-\d+ \d+:\d+:\d+\.\d+))' 
-        #- labels:
-        #    test_timestamp: timestamp
+        - regex:
+            expression: 'target=(?P<target>([^ ]+)) '
+        - labels:
+            target: target
         - timestamp:
             source: timestamp
             #

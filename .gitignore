@@ -32,3 +32,8 @@ data/prometheus
 #
 docker-compose.override.yml
 
+# 
+# Don't include hosts.txt, since I expect that users will modify it.
+#
+hosts.txt
+

@@ -1,0 +1,16 @@
+#
+# This file is copied to /etc/hosts in the ping container.
+#
+127.0.0.1	localhost
+8.8.4.4		google-dns-4
+8.8.8.8		google-dns-8
+9.9.9.9		quad9-dns
+
+#
+# Any hostname that starts with "internal" will be treated differently--it will have
+# a separate dashboard for packet loss, and it will not be included 
+# in the aggregate packet loss dashboard.
+#
+192.168.1.1     internal-192-168-1-1
+10.0.0.1		internal-10-0-0-1
+
