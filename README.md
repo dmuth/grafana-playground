@@ -21,6 +21,8 @@ This is a little project I put together that lets you spin up a Grafana ecosyste
 
 - `cp hosts.txt.sample hosts.txt` to set up your `hosts.txt` file
 - Run `docker-compose up` to start up the environment.
+  - To spin up a "lite" version: `./bin/start-lite.sh`
+  - The lite version doesn't run SEPTA, Telegraf, or anything not related to pinging of hosts
 - Go to http://localhost:3000/ and log into Grafana with login/pass of `admin/admin`.
 - [Create an API with Admin access](http://localhost:3000/org/apikeys)
 - Spawn a shell in the `tools` container and import the dashboards and data sources into Grafana
