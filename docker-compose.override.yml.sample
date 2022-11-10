@@ -1,4 +1,6 @@
 
+version: "3"
+
 #
 # Be sure to run:
 #
@@ -11,7 +13,7 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
   ping:
     #environment:
@@ -19,31 +21,31 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
   promtail:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
   telegraf:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
   loki:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
   grafana:
     logging:
       driver: loki
       options:
-        loki-url: http://host.docker.internal:3100/loki/api/v1/push
+        loki-url: http://loki:3100/loki/api/v1/push
 
 
 

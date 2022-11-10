@@ -110,6 +110,7 @@ services:
     #image: grafana/loki:2.3.0
     #image: grafana/loki:2.6.1
     image: grafana/loki:latest
+    user: root
     volumes:
       - ./config:/mnt/config
       - ./data/loki-data:/tmp/loki
@@ -124,6 +125,12 @@ services:
   #
   prometheus:
     image: prom/prometheus
+    #
+    # Not thrilled with having to run as root in the container, but trying
+    # to run this in a Linux VM has permission issues, since Docker commands
+    # are normally run as root...
+    #
+    user: root
     ports:
       - "9090:9090"
     volumes:
@@ -137,6 +144,8 @@ services:
   #
   grafana:
     image: grafana/grafana:latest
+    # Running this as root for the same reason Prometheus is running as root.
+    user: root
     volumes:
       - ./data/grafana:/var/lib/grafana
     ports:
