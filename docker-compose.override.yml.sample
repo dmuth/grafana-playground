@@ -4,48 +4,16 @@ version: "3"
 #
 # Be sure to run:
 #
-#		ln -s docker-compose.override.yml.sample docker-compose.override.yml 
+#		cp docker-compose.override.yml.sample docker-compose.override.yml 
 #
 # ...if you want this file to be used.
 #
 services:
-  logs:
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
 
   ping:
-    #environment:
-      #HOSTS: "google.com amazon.com google-dns-4 google-dns-8 quad9-dns internal-192-168-1-1 internal-10-0-0-1"
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
+    environment:
+      HOSTS: "google.com amazon.com google-dns-4 google-dns-8 quad9-dns internal-192-168-1-1 internal-10-0-0-1"
 
-  promtail:
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
-
-  telegraf:
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
-
-  loki:
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
-
-  grafana:
-    logging:
-      driver: loki
-      options:
-        loki-url: http://loki:3100/loki/api/v1/push
 
 
 

@@ -163,8 +163,6 @@ Docker normally writes standard output from its containers to a file.  However, 
 can also be sent somewhere else... such as Loki.  Even the output from Loki can be sent back to itself!
 Here's how to do that:
 
-- First, install the Docker plugin to talk to Loki:
-  - `docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions`
 - Now, make a copy of `docker-compose.override.yml.sample` to `docker-compose.override.yml`:
   - `cp -v docker-compose.override.yml.sample docker-compose.override.yml`
   - `docker-compose.override.yml` is excluded with `.gitignore` so changes made be made to it.
@@ -179,7 +177,17 @@ Here's how to do that:
     - Click `Upload JSON file` and navgiate to the file `config/log-volume-dashboard.json`, then click `Import`.
   - The dashboard should now show a breakdown of all log volumes.
 
-More about how to configure the Docker Loki plugin [can be read here](https://grafana.com/docs/loki/latest/clients/docker-driver/configuration/).
+
+## FAQ: After rebuilding the machine, I see strange behavior in Grafana, such as "Frontend not running"
+
+I've experienced this myself, and I haven't been able to reliably reproduce it, but a few things seem
+to have helped:
+
+- Removing/adding the data source for Loki in Grafana
+- Going to the bottom of the configuration page for the Loki data source, and clicking "Save and Test"
+- Editing each graph in Grafana, going into the query, and hitting "ctrl-enter" to resubmit the query.  Yes, that seems weird to me too.
+
+I expect to update this section as I perform more troubleshooting over the life of this app.
 
 
 ## Additional Considerations

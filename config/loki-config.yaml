@@ -1,3 +1,10 @@
+#
+# Documentation: https://grafana.com/docs/loki/latest/configuration/
+#
+# To make changes effective, restart Loki with:
+#
+#      docker-compose restart loki
+#
 auth_enabled: false
 
 server:
@@ -9,11 +16,12 @@ ingester:
     enabled: true
     dir: /tmp/wal
     #
-    # Create checkpoints every minute.  I wouldn't normally do this in production,
-    # but for testing/dev where I could be slamming in a bunch of events all at once
-    # for testing purposes, I don't want to have huge WALs floating around if I can help it.
+    # How often to create checkpoints?
     #
-    checkpoint_duration: 1m
+    # I used to have this at 1 minute, but it was creating an insane amount of files
+    # which caused other performance problems.  Feel free to tweak this.
+    #
+    checkpoint_duration: 5m
   lifecycler:
     address: 127.0.0.1
     ring:
