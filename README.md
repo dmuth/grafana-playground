@@ -73,6 +73,7 @@ Here are a few other dashboards which show details about the running system:
 - Uncomment the `environment:` and `HOSTS:` keys.
 - Add additional hosts or IPs into `HOSTS:` as you see fit.
 - Restart the `ping` container with `docker-compose kill ping; docker-compose rm -f ping; docker-compose up -d ping`.
+- Current hosts being pined can be inspected with `docker inspect grafana-playground_ping_1 | jq .[].Config.Env` (adjust the container name accordingly).
 
 
 ## Exporting Dashboards
@@ -107,14 +108,6 @@ in the `logs` volume, which will then be picked up by the `promtail` container. 
 in Grafana with this query:
 
 - `{filename=~"/logs/synthetic/manual.log"}`
-
-
-## Changing Which Hosts are Pinged
-
-- Edit `docker-compose.yml`
-- Change the `HOSTS` variable for the `ping` container.
-- Restart the `ping` container with `docker-compose kill ping; docker-compose up -d ping`
-- Current hosts being pined can be inspected with `docker inspect grafana-playground_ping_1 | jq .[].Config.Env` (adjust the container name accordingly).
 
 
 ## Considerations for Mac Users
