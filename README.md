@@ -171,7 +171,7 @@ Here's how to do that:
   - The dashboard should now show a breakdown of all log volumes.
 
 
-## FAQ: After rebuilding the machine, I see strange behavior in Grafana, such as "Frontend not running"
+## FAQ: After rebuilding the deployment, I see strange behavior in Grafana, such as "Frontend not running"
 
 I've experienced this myself, and I haven't been able to reliably reproduce it, but a few things seem
 to have helped:
